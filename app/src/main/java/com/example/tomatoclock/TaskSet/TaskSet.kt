@@ -65,11 +65,7 @@ fun TaskSetPage(taskset: taskset_model) {
                 calendarPage()
             }
         }
-        if (tasklistModel.showCustom) {
-            Dialog(onDismissRequest = { /*TODO*/ }) {
-                show_degital(tasklistModel = tasklistModel)
-            }
-        }
+
         if (tasksetModel.showerror) {
             Dialog(onDismissRequest = { /*TODO*/ }) {
                 erroemesssage(tasksetModel.error, { tasksetModel.showerror = false })

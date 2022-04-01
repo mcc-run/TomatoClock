@@ -21,6 +21,8 @@ class tasklist_model : ViewModel() {
 
     var tasks = mutableStateListOf<Task>()
 
+    var timecount by mutableStateOf(0f)
+
     //    添加任务按钮
     var addtask by mutableStateOf(false)
     fun onchange_add() {
@@ -49,18 +51,13 @@ class tasklist_model : ViewModel() {
             showerror = true
             return
         }
-        if (timenames[times_selected-1] == "自定义"){
-            error = "请输入自定义时间！"
-            showerror = true
-            return
-        }
+
         task.userid = homeModel.user.id
         task.taskname = taskname
         task.model_selected = model_selected
         task.time_selected = time_selected
         if(time_selected == 1){
-            var temp = timenames[times_selected-1]
-            task.time_count = temp.substring(0,temp.length-2).toInt()
+            task.time_count = timecount.toInt()
         }
         if(model_selected == 2){
             task.target_year = year
@@ -81,7 +78,7 @@ class tasklist_model : ViewModel() {
         model_selected = 1
         time_selected = 1
         times_selected = 1
-        timenames[2] = "自定义"
+
     }
 
     public fun commit_task(task: Task) {
@@ -118,9 +115,7 @@ class tasklist_model : ViewModel() {
     //    dialog详细信息
 //    任务名
     var taskname by mutableStateOf("")
-    fun ontasknamechange(value: String) {
-        taskname = value
-    }
+
 
     //    模式选择
     val modelname = mutableStateListOf<String>("普通番茄钟", "定目标", "养习惯")
@@ -154,29 +149,10 @@ class tasklist_model : ViewModel() {
 
 //    时间细节
 
-    val timenames = mutableStateListOf<String>("25分钟", "35分钟", "自定义")
-    var Customtime by mutableStateOf(0)
-    var showCustom by mutableStateOf(false)
+
+
     var times_selected by mutableStateOf(1)
-    fun gettimesname(index: Int): String {
-        return timenames.get(index)
-    }
 
-    fun gettimes_selected(index: Int): Boolean {
-        return times_selected == index
-    }
-
-    fun onchange_times_selected(index: Int) {
-        Log.d("onchange_times_selected",index.toString())
-        if (index == 3 && times_selected == 3){
-            showCustom = true
-            Log.d("onchange_times_selected",showCustom.toString())
-        }
-        else{
-            times_selected = index
-            showCustom = false
-        }
-    }
 
     var showcalendar by mutableStateOf(false)
     fun opencalendar() {
@@ -186,22 +162,8 @@ class tasklist_model : ViewModel() {
     fun closecalendar() {
         showcalendar = false
     }
-    fun onchange_Customtime(temp : String){
-        var s = StringBuilder()
-        if(temp.length>0){
-            for (c in temp) {
-                if (c.compareTo('0') >= 0 && c.compareTo('9') <= 0) s.append(c)
-            }
-            Customtime = s.toString().substring(0, if (s.length >= 3) 3 else s.length).toInt()
-            if (Customtime > 180)Customtime = 180
-        }
-        else Customtime = 0
-    }
-    fun oncommit_Customtime(){
-        if (Customtime > 0)timenames[2] = "${Customtime}分钟"
-        else timenames[2] = "自定义"
-        showCustom = false
-    }
+
+
 
     //    目标卡细节
 //    日期

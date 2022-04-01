@@ -38,11 +38,11 @@ import com.example.tomatoclock.Countdown.countdownModel
 import com.example.tomatoclock.R
 import java.util.*
 
-lateinit var tasklistModel : tasklist_model
+lateinit var tasklistModel: tasklist_model
 
 @Composable
-fun TaskListPage(tasklist : tasklist_model) {
-    tasklistModel= tasklist
+fun TaskListPage(tasklist: tasklist_model) {
+    tasklistModel = tasklist
     TaskListView(tasklistModel = tasklistModel)
 
 }
@@ -72,7 +72,7 @@ fun TaskListView(tasklistModel: tasklist_model) {
                     dialogpage(
                         Modifier,
                         tasklistModel = tasklistModel,
-                        { tasklistModel.oncancell_add()},
+                        { tasklistModel.oncancell_add() },
                         { tasklistModel.oncommit_add() }
                     )
                 }
@@ -81,11 +81,6 @@ fun TaskListView(tasklistModel: tasklist_model) {
             if (tasklistModel.showcalendar) {
                 Dialog(onDismissRequest = { /*TODO*/ }) {
                     calendarPage()
-                }
-            }
-            if (tasklistModel.showCustom) {
-                Dialog(onDismissRequest = { /*TODO*/ }) {
-                    show_degital(tasklistModel = tasklistModel)
                 }
             }
             if (tasklistModel.showerror) {
@@ -97,7 +92,7 @@ fun TaskListView(tasklistModel: tasklist_model) {
         }
 
     }
-    
+
 
 }
 
@@ -156,14 +151,13 @@ fun dialogpage(
             Modifier
                 .weight(1f)
         )
-        Column(Modifier.height(5.dp)) {
-
-        }
+        Column(Modifier.height(5.dp)) {}
+        //        计时细节
         if (tasklistModel.time_selected == 1) {
-            //        计时细节
             dialog_normal_detail(
                 Modifier
                     .weight(1f)
+                    .width(250.dp)
             )
         }
 
@@ -331,41 +325,29 @@ fun calendarPage() {
 
 }
 
-//自定义按钮，添加自定义时间
-@Composable
-fun show_degital(tasklistModel: tasklist_model) {
-    Column(
-        Modifier.background(Color.White),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-//      输入框
-        TextField(
-            value = "${tasklistModel.Customtime}",
-            onValueChange = { tasklistModel.onchange_Customtime(it) },
-            colors = TextFieldDefaults.textFieldColors(
-                backgroundColor = Color.White
-            ),
-            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
-        )
-//        确认按钮
-        Button(onClick = { tasklistModel.oncommit_Customtime() }) {
-            Text(text = "确定")
-        }
-    }
-}
+
 
 //普通番茄选项卡,选择时长
 @Composable
 fun dialog_normal_detail(modifier: Modifier) {
-    Row(modifier = modifier, horizontalArrangement = Arrangement.Center) {
-        for (index in 0..2) {
-            dialog_button(
-                Modifier.padding(end = 10.dp),
-                { tasklistModel.onchange_times_selected(index + 1) },
-                { tasklistModel.gettimes_selected(index + 1) },
-                { tasklistModel.gettimesname(index) })
-        }
+    Column(
+        modifier = modifier,
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Text(text = "${tasklistModel.timecount.toInt()}分钟", color = Color(rgb(81, 178, 221)))
+        Slider(
+            value = tasklistModel.timecount,
+            onValueChange = { tasklistModel.timecount = it },
+            valueRange = 0f..180f,
+            colors = SliderDefaults.colors(
+                activeTrackColor = Color(rgb(81, 178, 221)),
+                inactiveTrackColor = Color(rgb(236, 245, 252)),
+                thumbColor = Color(rgb(81, 178, 221)),
+
+            )
+
+        )
     }
 }
 
@@ -394,6 +376,7 @@ fun dialog_time_model(modifier: Modifier, tasklistModel: tasklist_model) {
                 { tasklistModel.getmodel_selected(index + 1) },
                 { tasklistModel.getmodelname(index) })
         }
+
     }
 }
 
@@ -518,7 +501,7 @@ fun mainview(modifier: Modifier, tasklistModel: tasklist_model) {
 
 //任务项
 @Composable
-fun taskitem(name: String, time: String,onstart : ()->Unit) {
+fun taskitem(name: String, time: String, onstart: () -> Unit) {
     ConstraintLayout(
         modifier = Modifier
             .width(370.dp)
@@ -587,7 +570,9 @@ fun dialogpreview() {
         Modifier
             .size(400.dp, 300.dp)
             .background(color = Color.White, shape = RoundedCornerShape(10.dp)),
-        tasklistModel = tasklistModel,{tasklistModel.oncancell_add()},{tasklistModel.oncommit_add()}
+        tasklistModel = tasklistModel,
+        { tasklistModel.oncancell_add() },
+        { tasklistModel.oncommit_add() }
     )
 }
 
