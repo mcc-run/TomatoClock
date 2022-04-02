@@ -138,11 +138,32 @@ class MainActivity : ComponentActivity() {
                 val typeOf = object : TypeToken<List<set>>() {}.type
                 val sets = gson.fromJson<List<set>>(data, typeOf)
                 for (set in sets) {
-                    tasksetModel.sets.add(set)
-                    tasksetModel.visibles.add(false)
-                    tasksetModel.rotates.add(0f)
+                    initTaskset(set)
                 }
 
+            }
+
+        })
+    }
+
+    private fun initTaskset(set: set) {
+        val gson = Gson()
+        val tasks_body = FormBody.Builder().add("tasksetid", set.id.toString()).build()
+        HttpUtil.postRequest("getTaskById", tasks_body, object : Callback {
+            override fun onFailure(call: Call, e: IOException) {
+
+            }
+
+            override fun onResponse(call: Call, response: Response) {
+                val data = response.body?.string() ?: ""
+                if (data != "") {
+                    val typeOf = object : TypeToken<List<Task>>() {}.type
+                    val tasks = gson.fromJson<List<Task>>(data, typeOf)
+                    set.taskset = tasks as MutableList<Task>
+                }
+                tasksetModel.sets.add(set)
+                tasksetModel.visibles.add(false)
+                tasksetModel.rotates.add(0f)
             }
 
         })

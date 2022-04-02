@@ -21,7 +21,7 @@ class tasklist_model : ViewModel() {
 
     var tasks = mutableStateListOf<Task>()
 
-    var timecount by mutableStateOf(0f)
+    var timecount by mutableStateOf(25f)
 
     //    添加任务按钮
     var addtask by mutableStateOf(false)
@@ -58,6 +58,7 @@ class tasklist_model : ViewModel() {
         task.time_selected = time_selected
         if(time_selected == 1){
             task.time_count = timecount.toInt()
+            timecount = 25f
         }
         if(model_selected == 2){
             task.target_year = year
